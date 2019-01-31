@@ -1,0 +1,14 @@
+# CMake
+cmake-build-debug/
+
+# Dependencies
+lib/glad/*
+lib/glfw/*
+lib/glm/*
+lib/physx/*
+
+# CLion
+.idea/
+
+# Visual Studio
+.vs/
