@@ -9,7 +9,7 @@
 void Drawable3D::draw(std::shared_ptr<ShaderSet> &shaderSet, bool renderWireframe)
 {
     shaderSet->setMat4("model", modelMatrix);
-    shaderSet->setVec4("color", glm::vec4(0.2f, 0.5f, 0.11f, 1.f));
+    shaderSet->setVec4("color", color);
 
     auto drawMode = renderWireframe ? GL_LINE_STRIP : GL_TRIANGLES;
 
@@ -24,14 +24,20 @@ void Drawable3D::resetTransform()
 
     position = glm::vec3(0.f);
     rotationDegrees = 0.f;
-    rotationAxis = glm::vec3(0.f);
+    rotationAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+}
+
+void Drawable3D::setColor(glm::vec4 newColor)
+{
+    color = newColor;
 }
 
 void Drawable3D::setPosition(glm::vec3 newPos)
 {
-    resetTransform();
+    modelMatrix = glm::mat4(1.f);
 
-    modelMatrix = glm::rotate(modelMatrix, glm::radians(rotationDegrees), rotationAxis); // Need to re-apply previous rotation
+    modelMatrix = glm::rotate(modelMatrix, glm::radians(rotationDegrees), rotationAxis);
+    modelMatrix = glm::scale(modelMatrix, scale);
     modelMatrix = glm::translate(modelMatrix, newPos);
 
     position = newPos;
@@ -39,13 +45,23 @@ void Drawable3D::setPosition(glm::vec3 newPos)
 
 void Drawable3D::setRotation(float newDegrees, glm::vec3 newRotationAxis)
 {
-    resetTransform();
+    modelMatrix = glm::mat4(1.f);
 
     modelMatrix = glm::rotate(modelMatrix, glm::radians(newDegrees), newRotationAxis);
-    modelMatrix = glm::translate(modelMatrix, position); // Need to re-apply previous translation
+    modelMatrix = glm::scale(modelMatrix, scale);
+    modelMatrix = glm::translate(modelMatrix, position);
 
     rotationDegrees = newDegrees;
     rotationAxis = newRotationAxis;
+}
+
+void Drawable3D::setScale(glm::vec3 newScale)
+{
+    modelMatrix = glm::mat4(1.f);
+
+    modelMatrix = glm::rotate(modelMatrix, glm::radians(rotationDegrees), rotationAxis);
+    modelMatrix = glm::scale(modelMatrix, newScale);
+    modelMatrix = glm::translate(modelMatrix, position);
 }
 
 Drawable3D::Drawable3D(unsigned int id)

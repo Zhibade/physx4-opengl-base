@@ -14,6 +14,12 @@ Scene::Scene()
     grid = std::make_shared<Plane3D>(1);
     theCube = std::make_shared<Cube3D>(2);
 
+    grid->setColor(glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
+    grid->setScale(glm::vec3(2.0f, 2.0f, 2.0f));
+
+    theCube->setRotation(-45.f, glm::vec3(0.0f, 1.0f, 0.0f));
+    theCube->setPosition(glm::vec3(0.f, 0.5f, 0.f));
+
     // Matrices
     viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, -1.0f, -6.5f)); // Moving camera backwards a bit
     projMatrix = glm::perspective(glm::radians(45.f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.f);

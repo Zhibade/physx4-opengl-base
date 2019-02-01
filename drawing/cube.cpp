@@ -14,7 +14,6 @@ Cube3D::Cube3D(unsigned int id) : Drawable3D(id)
 
     getVertexData(vertexData, size, vertexCount);
     initVertexBuffers(vertexData, size, vertexCount);
-    setRotation(-45.f, glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void Cube3D::getVertexData(float* &vertexData, unsigned int &size, unsigned int &vertexCount)

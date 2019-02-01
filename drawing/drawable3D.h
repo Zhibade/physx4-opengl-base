@@ -20,11 +20,17 @@ public:
     /* Resets position and rotation to the origin with no rotation */
     virtual void resetTransform();
 
+    /* Sets this drawable's color */
+    virtual void setColor(glm::vec4 newColor);
+
     /* Sets the absolute position of the object in the scene */
     virtual void setPosition(glm::vec3 newPos);
 
     /* Sets the rotation of the object in degrees */
     virtual void setRotation(float newDegrees, glm::vec3 newRotationAxis);
+
+    /* Sets the scale of the object */
+    virtual void setScale(glm::vec3 newScale);
 
 protected:
     explicit Drawable3D(unsigned int id);
@@ -38,9 +44,13 @@ private:
     unsigned int VBO, VAO;
 
     glm::mat4 modelMatrix = glm::mat4(1.0f);
+
     glm::vec3 position = glm::vec3(0.0f);
     float rotationDegrees = 0.f;
-    glm::vec3 rotationAxis = glm::vec3(0.0f);
+    glm::vec3 rotationAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 scale = glm::vec3(1.0f);
+
+    glm::vec4 color = glm::vec4(0.2f, 0.5f, 0.11f, 1.f);
 };
 
 #endif //PHYSX4_DRAWABLE3D_H
