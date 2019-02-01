@@ -4,13 +4,15 @@
 #include "GLFW/glfw3.h"
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
+#include "grid.h"
 #include "../constants.h"
 #include "../utils/shaderLoader.h"
 
 
 Scene::Scene()
 {
-    theCube = std::make_shared<Cube3D>();
+    grid = std::make_shared<Plane3D>(1);
+    theCube = std::make_shared<Cube3D>(2);
 
     // Matrices
     viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, -1.0f, -6.5f)); // Moving camera backwards a bit
@@ -36,7 +38,8 @@ void Scene::render()
     glViewport(0, 0, (GLsizei)WIN_WIDTH, (GLsizei)WIN_HEIGHT);
     glPushMatrix(); // BEGIN drawing
 
-    theCube->draw(activeShaderSet);
+    grid->draw(activeShaderSet, false);
+    theCube->draw(activeShaderSet, false);
 
     glPopMatrix(); // END drawing
 }

@@ -6,12 +6,15 @@
 #include "../utils/shaderLoader.h"
 
 
-void Drawable3D::draw(std::shared_ptr<ShaderSet> &shaderSet)
+void Drawable3D::draw(std::shared_ptr<ShaderSet> &shaderSet, bool renderWireframe)
 {
     shaderSet->setMat4("model", modelMatrix);
     shaderSet->setVec4("color", glm::vec4(0.2f, 0.5f, 0.11f, 1.f));
 
-    glDrawArrays(GL_TRIANGLES, 0, vertCount);
+    auto drawMode = renderWireframe ? GL_LINE_STRIP : GL_TRIANGLES;
+
+    glBindVertexArray(VAO); // Need to rebind vertex array on each draw so we can have multiple objects with different shapes
+    glDrawArrays(drawMode, 0, vertCount);
     //glDrawElements(GL_TRIANGLES, sizeof(CUBE_INDEXES), GL_UNSIGNED_SHORT, nullptr);
 }
 
@@ -43,6 +46,12 @@ void Drawable3D::setRotation(float newDegrees, glm::vec3 newRotationAxis)
 
     rotationDegrees = newDegrees;
     rotationAxis = newRotationAxis;
+}
+
+Drawable3D::Drawable3D(unsigned int id)
+{
+    VAO = id;
+    VBO = id;
 }
 
 Drawable3D::~Drawable3D()

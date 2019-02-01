@@ -35,7 +35,7 @@ include_directories((${PHYSX_SHARED_INCLUDE_DIR}))
 
 link_directories(${PHYSX_LIB_DIR})
 
-add_executable(PhysX4 main.cpp callbacks.h callbacks.cpp constants.h drawing/scene.cpp drawing/scene.h drawing/cube.cpp drawing/cube.h utils/fileLoader.cpp utils/fileLoader.h utils/shaderLoader.cpp utils/shaderLoader.h lib/glad/src/glad.c physics/PhysicsErrorCallback.cpp physics/PhysicsErrorCallback.h drawing/drawable3D.cpp drawing/drawable3D.h)
+add_executable(PhysX4 main.cpp callbacks.h callbacks.cpp constants.h drawing/scene.cpp drawing/scene.h drawing/cube.cpp drawing/cube.h utils/fileLoader.cpp utils/fileLoader.h utils/shaderLoader.cpp utils/shaderLoader.h lib/glad/src/glad.c physics/PhysicsErrorCallback.cpp physics/PhysicsErrorCallback.h drawing/drawable3D.cpp drawing/drawable3D.h drawing/grid.cpp drawing/grid.h)
 
 target_link_libraries(PhysX4 ${OPENGL_gl_LIBRARY})
 target_link_libraries(PhysX4 glfw)

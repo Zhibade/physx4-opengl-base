@@ -12,7 +12,7 @@ class Drawable3D
 {
 public:
     /* Draws the drawable into the scene. Passes model matrix to given shader set */
-    virtual void draw(std::shared_ptr<ShaderSet> &shaderSet);
+    virtual void draw(std::shared_ptr<ShaderSet> &shaderSet, bool renderWireframe);
 
     /* Gets the vertex and normal data for this 3D drawable. Abstract function. */
     virtual void getVertexData(float* &vertexData, unsigned int &size, unsigned int &vertexCount) = 0;
@@ -27,6 +27,7 @@ public:
     virtual void setRotation(float newDegrees, glm::vec3 newRotationAxis);
 
 protected:
+    explicit Drawable3D(unsigned int id);
     virtual ~Drawable3D();
 
     /* Initializes vertex buffers and prepares them for rendering */

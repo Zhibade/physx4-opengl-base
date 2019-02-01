@@ -6,7 +6,7 @@
 #include "../utils/shaderLoader.h"
 
 
-Cube3D::Cube3D()
+Cube3D::Cube3D(unsigned int id) : Drawable3D(id)
 {
     float* vertexData = nullptr;
     unsigned int size = 0;

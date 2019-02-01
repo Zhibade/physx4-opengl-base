@@ -6,6 +6,7 @@
 
 
 class Cube3D;
+class Plane3D;
 class ShaderSet;
 
 
@@ -31,6 +32,7 @@ private:
     glm::vec3 lightPos = glm::vec3(1.0f);
 
     std::shared_ptr<Cube3D> theCube;
+    std::shared_ptr<Plane3D> grid;
     std::shared_ptr<ShaderSet> activeShaderSet;
 };
 
