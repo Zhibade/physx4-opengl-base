@@ -3,6 +3,7 @@
  */
 
 #include <iostream>
+#include <memory>
 
 #include "callbacks.h"
 #include "constants.h"
@@ -19,14 +20,20 @@
 #include "utils/shaderLoader.h"
 
 
+GLFWwindow* window;
+
 physx::PxPhysics* pxPhysics = nullptr;
 physx::PxFoundation* pxFoundation = nullptr;
-physx::PxDefaultAllocator pxAllocator;
-PhysicsErrorCallback pxErrorCallback;
+
+std::shared_ptr<Scene> worldScene;
+
 
 /* PhysX */
 bool initPhysX()
 {
+    physx::PxDefaultAllocator pxAllocator;
+    PhysicsErrorCallback pxErrorCallback;
+
     pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, pxAllocator, pxErrorCallback);
     pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, physx::PxTolerancesScale(), true, nullptr);
 
@@ -39,30 +46,27 @@ bool initPhysX()
     return true;
 }
 
-/* Clean PhysX */
 void cleanPhysX()
 {
-    pxPhysics->release();
     pxFoundation->release();
+    pxPhysics->release();
 }
 
-/* MAIN */
-int main(int argc, char** argv)
+/* Window */
+bool initWindow()
 {
-    // Window initialization
-    GLFWwindow* window;
-
     if (!glfwInit()) // Init GLFW
     {
         std::cerr << "[ERROR] [GLFW] :: An error occurred while initializing GLFW";
-        return -1;
+        return false;
     }
 
     window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, "PhysX4 Test", nullptr, nullptr);
     if (!window)
     {
+        std::cerr << "[ERROR] [GLFW] :: An error occurred while creating the window";
         glfwTerminate();
-        return -1;
+        return false;
     }
 
     glfwMakeContextCurrent(window);
@@ -70,38 +74,63 @@ int main(int argc, char** argv)
 
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) // Init GLAD
     {
-        return -1;
+        std::cerr << "[ERROR] [GLAD] :: An error occurred while initializing GLAD";
+        return false;
     }
 
+    return true;
+}
+
+/* 3D world */
+void initWorld()
+{
     // Shaders and shapes initialization
     std::string vertShader = fileLoader::readTextFile(VERT_SHADER_PATH.c_str());
     std::string fragShader = fileLoader::readTextFile(FRAG_SHADER_PATH.c_str());
 
-    ShaderSet simpleShaderSet(vertShader.c_str(), fragShader.c_str());
-    simpleShaderSet.use();
+    std::shared_ptr<ShaderSet> simpleShaderSet(new ShaderSet(vertShader.c_str(), fragShader.c_str()));
+    simpleShaderSet->use();
 
     // Init scene
-    Scene scene;
-    scene.setLightPos(glm::vec3(-3.f, 3.f, 10.f));
+    worldScene = std::make_shared<Scene>();
+    worldScene->setActiveShaderSet(simpleShaderSet);
+    worldScene->setLightPos(glm::vec3(-3.f, 3.f, 10.f));
+}
 
-    // Init PhysX 4
+/* App update per frame */
+void update()
+{
+    glfwPollEvents();
+    worldScene->render();
+
+    glfwSwapBuffers(window);
+}
+
+/* MAIN */
+int main(int argc, char** argv)
+{
+    if (!initWindow())
+    {
+        return -1;
+    }
+
     if (!initPhysX())
     {
         return -1;
     }
 
+    initWorld();
+
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
-        glfwPollEvents();
-        scene.render(simpleShaderSet);
-
-        glfwSwapBuffers(window);
+        update();
     }
 
+    // Clean up
+    worldScene.reset();
     cleanPhysX();
-
-    // End
     glfwTerminate();
+
     return 0;
 }

@@ -17,7 +17,7 @@ Scene::Scene()
     projMatrix = glm::perspective(glm::radians(45.f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.f);
 }
 
-void Scene::render(ShaderSet &shaderSet)
+void Scene::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(BG_COLOR_R, BG_COLOR_G, BG_COLOR_B, 1.0f);
@@ -26,19 +26,24 @@ void Scene::render(ShaderSet &shaderSet)
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    shaderSet.setMat4("view", viewMatrix);
-    shaderSet.setMat4("projection", projMatrix);
+    activeShaderSet->setMat4("view", viewMatrix);
+    activeShaderSet->setMat4("projection", projMatrix);
 
-    shaderSet.setVec3("mainLight", lightPos);
+    activeShaderSet->setVec3("mainLight", lightPos);
 
     //glColor3f(0.8f, 0.0f, 0.0f);
 
     glViewport(0, 0, (GLsizei)WIN_WIDTH, (GLsizei)WIN_HEIGHT);
     glPushMatrix(); // BEGIN drawing
 
-    theCube->draw(shaderSet);
+    theCube->draw(activeShaderSet);
 
     glPopMatrix(); // END drawing
+}
+
+void Scene::setActiveShaderSet(std::shared_ptr<ShaderSet> &shaderSet)
+{
+    activeShaderSet = shaderSet;
 }
 
 void Scene::setLightPos(glm::vec3 newPos)
@@ -48,5 +53,6 @@ void Scene::setLightPos(glm::vec3 newPos)
 
 Scene::~Scene()
 {
-    theCube = nullptr;
+    theCube.reset();
+    activeShaderSet.reset();
 }

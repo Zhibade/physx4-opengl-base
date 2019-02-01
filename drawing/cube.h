@@ -13,7 +13,7 @@ class Cube3D : public Drawable3D
 {
 public:
     Cube3D();
-    /* Gets the vertex and normal data for this 3D drawable */
+    /* Gets the vertex and normal data for a cube with hard edges */
     void getVertexData(float* &vertexData, unsigned int &size, unsigned int &vertexCount) override;
 
 private:

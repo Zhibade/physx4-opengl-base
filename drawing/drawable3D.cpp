@@ -6,10 +6,10 @@
 #include "../utils/shaderLoader.h"
 
 
-void Drawable3D::draw(ShaderSet &shaderSet)
+void Drawable3D::draw(std::shared_ptr<ShaderSet> &shaderSet)
 {
-    shaderSet.setMat4("model", modelMatrix);
-    shaderSet.setVec4("color", glm::vec4(0.2f, 0.5f, 0.11f, 1.f));
+    shaderSet->setMat4("model", modelMatrix);
+    shaderSet->setVec4("color", glm::vec4(0.2f, 0.5f, 0.11f, 1.f));
 
     glDrawArrays(GL_TRIANGLES, 0, vertCount);
     //glDrawElements(GL_TRIANGLES, sizeof(CUBE_INDEXES), GL_UNSIGNED_SHORT, nullptr);

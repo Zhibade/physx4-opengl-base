@@ -1,6 +1,7 @@
 #ifndef PHYSX4_DRAWABLE3D_H
 #define PHYSX4_DRAWABLE3D_H
 
+#include <memory>
 #include "glm.hpp"
 
 
@@ -10,19 +11,19 @@ class ShaderSet;
 class Drawable3D
 {
 public:
-    /* Draws the cube into the scene. Passes model matrix to given shader set */
-    virtual void draw(ShaderSet &shaderSet);
+    /* Draws the drawable into the scene. Passes model matrix to given shader set */
+    virtual void draw(std::shared_ptr<ShaderSet> &shaderSet);
 
-    /* Gets the vertex and normal data for this 3D drawable */
+    /* Gets the vertex and normal data for this 3D drawable. Abstract function. */
     virtual void getVertexData(float* &vertexData, unsigned int &size, unsigned int &vertexCount) = 0;
 
-    /* Resets position and rotation to the default values */
+    /* Resets position and rotation to the origin with no rotation */
     virtual void resetTransform();
 
-    /* Sets the absolute position of the cube in the scene */
+    /* Sets the absolute position of the object in the scene */
     virtual void setPosition(glm::vec3 newPos);
 
-    /* Sets the rotation of the cube in degrees */
+    /* Sets the rotation of the object in degrees */
     virtual void setRotation(float newDegrees, glm::vec3 newRotationAxis);
 
 protected:
