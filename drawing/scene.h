@@ -6,6 +6,7 @@
 
 
 class Cube3D;
+class PhysicsEngine;
 class Plane3D;
 class ShaderSet;
 
@@ -13,7 +14,7 @@ class ShaderSet;
 class Scene
 {
 public:
-    Scene();
+    explicit Scene(bool enablePhysics = true);
     virtual ~Scene();
 
     /* Scene rendering logic */
@@ -31,9 +32,12 @@ private:
 
     glm::vec3 lightPos = glm::vec3(1.0f);
 
-    std::shared_ptr<Cube3D> theCube;
-    std::shared_ptr<Plane3D> grid;
+    std::unique_ptr<Cube3D> theCube;
+    std::unique_ptr<Plane3D> grid;
     std::shared_ptr<ShaderSet> activeShaderSet;
+
+    bool usePhysics = true;
+    std::unique_ptr<PhysicsEngine> physicsEngine;
 };
 
 #endif //PHYSX4_DISPLAY_H

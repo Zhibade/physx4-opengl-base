@@ -9,6 +9,17 @@ Minimalist OpenGL application for testing PhysX 4.0 API
 
 Put these dependencies in a folder named `lib` in the root directory. E.g `lib/glfw`. Please refer to `CMakeLists.txt` file for the specific paths.
 
+The following binaries are needed for PhysX:
+- PhysX_64.lib
+- PhysX_64.dll
+- PhysXCommon_64.lib
+- PhysXCommon_64.dll
+- PhysXFoundation_64.lib
+- PhysXFoundation_64.dll
+- PhysXExtensions_static_64.lib
+
+Don't forget to compile `PhysXExtensions` according to your project's CRT (C Runtime Library) setting.
+
 ## How to run
 - Build project using Visual C++ compiler.
 - Copy `PhysX_64.dll`, `PhysXCommon_64.dll`, `PhysXFoundation_64.dll` to the same directory as the executable.

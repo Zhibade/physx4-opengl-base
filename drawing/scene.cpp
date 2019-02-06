@@ -6,13 +6,22 @@
 #include "gtc/matrix_transform.hpp"
 #include "grid.h"
 #include "../constants.h"
+#include "../physics/engine.h"
 #include "../utils/shaderLoader.h"
 
 
-Scene::Scene()
+Scene::Scene(bool enablePhysics)
 {
-    grid = std::make_shared<Plane3D>(1);
-    theCube = std::make_shared<Cube3D>(2);
+    usePhysics = enablePhysics;
+
+    if (usePhysics)
+    {
+        physicsEngine = std::make_unique<PhysicsEngine>();
+        physicsEngine->addGroundPlane();
+    }
+
+    grid = std::make_unique<Plane3D>(1);
+    theCube = std::make_unique<Cube3D>(2);
 
     grid->setColor(glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
     grid->setScale(glm::vec3(2.0f, 2.0f, 2.0f));

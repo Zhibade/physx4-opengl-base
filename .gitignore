@@ -1,4 +1,5 @@
 # CMake
+cmake-build-release/
 cmake-build-debug/
 
 # Dependencies

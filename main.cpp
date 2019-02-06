@@ -12,45 +12,13 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
-#include "PxPhysicsAPI.h"
-
-#include "physics/PhysicsErrorCallback.h"
-
 #include "utils/fileLoader.h"
 #include "utils/shaderLoader.h"
 
 
 GLFWwindow* window;
-
-physx::PxPhysics* pxPhysics = nullptr;
-physx::PxFoundation* pxFoundation = nullptr;
-
 std::shared_ptr<Scene> worldScene;
 
-
-/* PhysX */
-bool initPhysX()
-{
-    physx::PxDefaultAllocator pxAllocator;
-    PhysicsErrorCallback pxErrorCallback;
-
-    pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, pxAllocator, pxErrorCallback);
-    pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, physx::PxTolerancesScale(), true, nullptr);
-
-    if (!pxFoundation || !pxPhysics)
-    {
-        std::cerr << "[ERROR] [PHYSX] :: An error occurred while initializing PhysX";
-        return false;
-    }
-
-    return true;
-}
-
-void cleanPhysX()
-{
-    pxFoundation->release();
-    pxPhysics->release();
-}
 
 /* Window */
 bool initWindow()
@@ -114,11 +82,6 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    if (!initPhysX())
-    {
-        return -1;
-    }
-
     initWorld();
 
     // Main loop
@@ -129,7 +92,6 @@ int main(int argc, char** argv)
 
     // Clean up
     worldScene.reset();
-    cleanPhysX();
     glfwTerminate();
 
     return 0;
