@@ -8,7 +8,8 @@ PhysicsEngine::PhysicsEngine()
 
     if (!pxFoundation || !pxPhysics)
     {
-        std::cerr << "[ERROR] [PHYSX] :: An error occurred while initializing PhysX";
+        std::cerr << "[ERROR] [PHYSICS] :: An error occurred while initializing PhysX";
+        return;
     }
 
     pxDispatcher = physx::PxDefaultCpuDispatcherCreate(4);
@@ -21,13 +22,38 @@ PhysicsEngine::~PhysicsEngine()
     if (!hasInitialized()) return;
 
     pxScene->release();
+    pxDispatcher->release();
     pxPhysics->release();
     pxFoundation->release();
 }
 
-void PhysicsEngine::addGroundPlane()
+void PhysicsEngine::addBox(int id, glm::vec3 position, float angleInDegrees, glm::vec3 rotationAxis, glm::vec3 halfExtents)
 {
-    physx::PxRigidStatic* groundPlane = physx::PxCreatePlane(*pxPhysics, physx::PxPlane(0,1,0,0), *pxMaterial);
+    if (!hasInitialized()) return;
+
+    physx::PxQuat rotation(glm::radians(angleInDegrees), physx::PxVec3(rotationAxis[0], rotationAxis[1], rotationAxis[2]));
+    physx::PxTransform transform(position[0], position[1], position[2], rotation);
+
+    physx::PxBoxGeometry boxGeometry(halfExtents[0], halfExtents[1], halfExtents[2]);
+    physx::PxShape* shape = pxPhysics->createShape(boxGeometry, *pxMaterial);
+
+    physx::PxRigidDynamic* rigidBody = pxPhysics->createRigidDynamic(transform);
+    rigidBody->attachShape(*shape);
+    physx::PxRigidBodyExt::updateMassAndInertia(*rigidBody, CUBE_DENSITY);
+
+    pxScene->addActor(*rigidBody);
+    dynamicRigidBodies.insert(std::make_pair(id, rigidBody));
+
+    shape->release();
+}
+
+void PhysicsEngine::addGroundPlane(glm::vec3 normal, float distanceFromOrigin)
+{
+    if (!hasInitialized()) return;
+
+    physx::PxPlane plane(normal[0], normal[1], normal[2], distanceFromOrigin);
+
+    physx::PxRigidStatic* groundPlane = physx::PxCreatePlane(*pxPhysics, plane, *pxMaterial);
     pxScene->addActor(*groundPlane);
 }
 
@@ -44,7 +70,31 @@ void PhysicsEngine::createScene()
     pxMaterial = pxPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 }
 
+void PhysicsEngine::setRigidBodyTransform(int id, glm::vec3 position, float angleInDegrees, glm::vec3 rotationAxis)
+{
+    if (!hasInitialized()) return;
+
+    physx::PxRigidDynamic* rigidBody = dynamicRigidBodies.at(id);
+
+    if (!rigidBody)
+    {
+        std::cerr << "[ERROR] [PHYSICS] :: No rigid body found with the ID: " << id << std::endl;
+        return;
+    }
+
+    physx::PxQuat rotation(glm::radians(angleInDegrees), physx::PxVec3(rotationAxis[0], rotationAxis[1], rotationAxis[2]));
+    physx::PxTransform transform(position[0], position[1], position[2], rotation);
+    rigidBody->setGlobalPose(transform);
+}
+
 bool PhysicsEngine::hasInitialized() const
 {
-    return !(!pxFoundation || !pxPhysics);
+    if (!pxFoundation || !pxPhysics)
+    {
+        std::cerr << "[ERROR] [PHYSICS] :: PhysX is not properly initialized. Please initialize it first before using" <<
+                     " any of the physics API." << std::endl;
+        return false;
+    }
+
+    return true;
 }

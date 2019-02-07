@@ -1,6 +1,7 @@
 #include "grid.h"
+#include "../physics/engine.h"
 
-Plane3D::Plane3D(unsigned int id) : Drawable3D(id)
+Plane3D::Plane3D(unsigned int id, std::shared_ptr<PhysicsEngine> physEngine) : Drawable3D(id)
 {
     float* vertexData = nullptr;
     unsigned int size = 0;
@@ -8,6 +9,18 @@ Plane3D::Plane3D(unsigned int id) : Drawable3D(id)
 
     getVertexData(vertexData, size, vertexCount);
     initVertexBuffers(vertexData, size, vertexCount);
+
+    physicsEngine = physEngine;
+
+    if (physicsEngine)
+    {
+        initRigidBody();
+    }
+}
+
+Plane3D::~Plane3D()
+{
+    physicsEngine.reset();
 }
 
 void Plane3D::getVertexData(float* &vertexData, unsigned int &size, unsigned int &vertexCount)
@@ -20,4 +33,9 @@ void Plane3D::getVertexData(float* &vertexData, unsigned int &size, unsigned int
     {
         vertexData[i] = PLANE_VERTEX_DATA[i];
     }
+}
+
+void Plane3D::initRigidBody()
+{
+    physicsEngine->addGroundPlane(PLANE_NORMAL, position[1]);
 }

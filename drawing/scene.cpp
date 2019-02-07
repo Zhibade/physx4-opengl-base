@@ -16,12 +16,11 @@ Scene::Scene(bool enablePhysics)
 
     if (usePhysics)
     {
-        physicsEngine = std::make_unique<PhysicsEngine>();
-        physicsEngine->addGroundPlane();
+        physicsEngine = std::make_shared<PhysicsEngine>();
     }
 
-    grid = std::make_unique<Plane3D>(1);
-    theCube = std::make_unique<Cube3D>(2);
+    grid = std::make_unique<Plane3D>(1, physicsEngine);
+    theCube = std::make_unique<Cube3D>(2, physicsEngine);
 
     grid->setColor(glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
     grid->setScale(glm::vec3(2.0f, 2.0f, 2.0f));
@@ -71,6 +70,8 @@ void Scene::setLightPos(glm::vec3 newPos)
 
 Scene::~Scene()
 {
+    grid.reset();
     theCube.reset();
     activeShaderSet.reset();
+    physicsEngine.reset();
 }

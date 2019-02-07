@@ -32,12 +32,12 @@ private:
 
     glm::vec3 lightPos = glm::vec3(1.0f);
 
-    std::unique_ptr<Cube3D> theCube;
     std::unique_ptr<Plane3D> grid;
+    std::unique_ptr<Cube3D> theCube;
     std::shared_ptr<ShaderSet> activeShaderSet;
 
     bool usePhysics = true;
-    std::unique_ptr<PhysicsEngine> physicsEngine;
+    std::shared_ptr<PhysicsEngine> physicsEngine;
 };
 
 #endif //PHYSX4_DISPLAY_H
