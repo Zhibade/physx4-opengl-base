@@ -17,6 +17,7 @@ The following binaries are needed for PhysX:
 - PhysXFoundation_64.lib
 - PhysXFoundation_64.dll
 - PhysXExtensions_static_64.lib
+- PhysXPvdSDK_static_64.lib
 
 Don't forget to compile `PhysXExtensions` according to your project's CRT (C Runtime Library) setting.
 

@@ -12,13 +12,13 @@
 #include "../utils/shaderLoader.h"
 
 
-Scene::Scene(bool enablePhysics)
+Scene::Scene(bool enablePhysics, bool debugPhysics)
 {
     usePhysics = enablePhysics;
 
     if (usePhysics)
     {
-        physicsEngine = std::make_shared<PhysicsEngine>();
+        physicsEngine = std::make_shared<PhysicsEngine>(debugPhysics);
     }
 
     grid = std::make_unique<Plane3D>(1, physicsEngine);
@@ -37,6 +37,11 @@ Scene::Scene(bool enablePhysics)
 
 void Scene::render()
 {
+    if (usePhysics)
+    {
+        physicsEngine->stepPhysics(1.f / 60.f);
+    }
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(CONSTANTS::RENDERING::BG_COLOR_R, CONSTANTS::RENDERING::BG_COLOR_G, CONSTANTS::RENDERING::BG_COLOR_B, 1.0f);
     glClearDepth(1.0f);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <string>
 
 #include "glm.hpp"
 #include "gtc/quaternion.hpp"
@@ -11,7 +12,11 @@
 class PhysicsEngine
 {
 public:
-    PhysicsEngine();
+    /**
+     * Initializes the physics engine. Debugging can be toggled on or off.
+     * @param enableDebugging - Toggles debugging of the physics engine
+     */
+    PhysicsEngine(bool enableDebugging = false);
     virtual ~PhysicsEngine();
 
     /**
@@ -45,6 +50,12 @@ public:
      */
     void setRigidBodyTransform(int id, glm::vec3 position, float angleInDegrees, glm::vec3 rotationAxis);
 
+    /**
+     * Steps the physics simulation at the given interval
+     * @param elapsedTime - Amount of seconds to advance the physics simulation
+     */
+    void stepPhysics(float elapsedTime);
+
 private:
     const float GRAVITY = -9.81f;
     const float CUBE_DENSITY = 10.f;
@@ -55,6 +66,14 @@ private:
     physx::PxPhysics* pxPhysics = nullptr;
     physx::PxFoundation* pxFoundation = nullptr;
     physx::PxDefaultCpuDispatcher* pxDispatcher = nullptr;
+
+    const std::string VISUAL_DEBUG_HOST = "127.0.0.1";
+    const int VISUAL_DEBUG_PORT = 5425;
+    const unsigned int VISUAL_DEBUG_TIMEOUT = 10;
+
+    bool isDebugging = false;
+    physx::PxPvd* pxVisualDebugger = nullptr;
+    physx::PxPvdTransport* pxVisualDebugTransport = nullptr;
 
     physx::PxScene* pxScene = nullptr;
     physx::PxMaterial* pxMaterial = nullptr;

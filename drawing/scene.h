@@ -11,15 +11,16 @@ class Plane3D;
 class ShaderSet;
 
 
-/* 3D Scene (rendering and phyics) that can contain 3D objects */
+/* 3D Scene (rendering and physics) that can contain 3D objects */
 class Scene
 {
 public:
     /**
      * Creates a new scene. Physics are enabled by default.
      * @param enablePhysics - Toggle for using physics
+     * @param debugPhysics - Toggle debugging of physics
      */
-    explicit Scene(bool enablePhysics = true);
+    explicit Scene(bool enablePhysics = true, bool debugPhysics = false);
     virtual ~Scene();
 
     /* Scene rendering loop */

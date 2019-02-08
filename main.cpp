@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include "callbacks.h"
 #include "constants.h"
@@ -48,7 +49,7 @@ bool initWindow()
 }
 
 /* 3D world initialization*/
-void initWorld()
+void initWorld(bool enablePhysicsDebug = false)
 {
     // Shaders initialization
     std::string vertShader = fileLoader::readTextFile(CONSTANTS::RENDERING::VERT_SHADER_PATH.c_str());
@@ -58,9 +59,30 @@ void initWorld()
     simpleShaderSet->use();
 
     // Init scene
-    worldScene = std::make_shared<Scene>();
+    worldScene = std::make_shared<Scene>(true, enablePhysicsDebug);
     worldScene->setActiveShaderSet(simpleShaderSet);
     worldScene->setLightPos(glm::vec3(-3.f, 3.f, 10.f));
+}
+
+/* Get if program is being run with the debug flag */
+bool shouldDebug(int argc, char** argv)
+{
+    if (argc <= 1)
+    {
+        return false;
+    }
+
+    for (int i = 0; i < argc; i++)
+    {
+        std::string arg(argv[i]);
+
+        if (arg == CONSTANTS::DEBUG_FLAG)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /* App update per frame */
@@ -80,7 +102,8 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    initWorld();
+    bool enablePhysicsDebug = shouldDebug(argc, argv);
+    initWorld(enablePhysicsDebug);
 
     // Main loop
     while (!glfwWindowShouldClose(window))

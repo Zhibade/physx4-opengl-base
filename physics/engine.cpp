@@ -3,10 +3,25 @@
 #include <iostream>
 
 
-PhysicsEngine::PhysicsEngine()
+PhysicsEngine::PhysicsEngine(bool enableDebugging)
 {
     pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, pxAllocator, pxErrorCallback);
-    pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, physx::PxTolerancesScale());
+
+    isDebugging = enableDebugging;
+    if (isDebugging && pxFoundation)
+    {
+        pxVisualDebugger = physx::PxCreatePvd(*pxFoundation);
+        pxVisualDebugTransport = physx::PxDefaultPvdSocketTransportCreate(VISUAL_DEBUG_HOST.c_str(),
+                VISUAL_DEBUG_PORT, VISUAL_DEBUG_TIMEOUT);
+
+        pxVisualDebugger->connect(*pxVisualDebugTransport, physx::PxPvdInstrumentationFlag::eALL);
+
+        pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, physx::PxTolerancesScale(), true, pxVisualDebugger);
+    }
+    else
+    {
+        pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, physx::PxTolerancesScale());
+    }
 
     if (!pxFoundation || !pxPhysics)
     {
@@ -26,6 +41,13 @@ PhysicsEngine::~PhysicsEngine()
     pxScene->release();
     pxDispatcher->release();
     pxPhysics->release();
+
+    if (isDebugging)
+    {
+        pxVisualDebugTransport->release();
+        pxVisualDebugger->release();
+    }
+
     pxFoundation->release();
 }
 
@@ -70,6 +92,17 @@ void PhysicsEngine::createScene()
 
     pxScene = pxPhysics->createScene(sceneDesc);
     pxMaterial = pxPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+
+    if (isDebugging)
+    {
+        physx::PxPvdSceneClient* visualDebugClient = pxScene->getScenePvdClient();
+
+        if (!visualDebugClient) return;
+
+        visualDebugClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+        visualDebugClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+        visualDebugClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+    }
 }
 
 void PhysicsEngine::setRigidBodyTransform(int id, glm::vec3 position, float angleInDegrees, glm::vec3 rotationAxis)
@@ -87,6 +120,12 @@ void PhysicsEngine::setRigidBodyTransform(int id, glm::vec3 position, float angl
     physx::PxQuat rotation(glm::radians(angleInDegrees), physx::PxVec3(rotationAxis[0], rotationAxis[1], rotationAxis[2]));
     physx::PxTransform transform(position[0], position[1], position[2], rotation);
     rigidBody->setGlobalPose(transform);
+}
+
+void PhysicsEngine::stepPhysics(float elapsedTime)
+{
+    pxScene->simulate(elapsedTime);
+    pxScene->fetchResults(true);
 }
 
 bool PhysicsEngine::hasInitialized() const

@@ -10,6 +10,8 @@
 
 namespace CONSTANTS
 {
+    const std::string DEBUG_FLAG = "--debug";
+
     namespace WINDOW
     {
         constexpr int WIN_WIDTH = 1024;
