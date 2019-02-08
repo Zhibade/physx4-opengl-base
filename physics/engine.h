@@ -1,29 +1,48 @@
-#ifndef PHYSX4_PHYSICSENGINE_H
-#define PHYSX4_PHYSICSENGINE_H
+#pragma once
 
 #include <map>
+
 #include "glm.hpp"
 #include "gtc/quaternion.hpp"
 #include "PxPhysicsAPI.h"
 
 
-/* Abstraction interface for using PhysX 4 */
+/* Interface for interacting with the physics engine (PhysX) */
 class PhysicsEngine
 {
 public:
     PhysicsEngine();
     virtual ~PhysicsEngine();
 
-    /* Create and add a box rigid body to the current physics simulation */
+    /**
+     * Create and add a dynamic rigid body box primitive
+     * @param id - Unique ID for this rigid body
+     * @param position - Initial absolute position
+     * @param angleInDegrees - Initial rotation amount in angles
+     * @param rotationAxis - Initial rotation axis around which the rotation amount is applied
+     * @param halfExtents - Half length of the box
+     */
     void addBox(int id, glm::vec3 position, float angleInDegrees, glm::vec3 rotationAxis, glm::vec3 halfExtents);
 
-    /* Create and add an infinite static rigid body plane to the current physics simulation */
+    /**
+     * Create and add an infinite plane as a static rigid body
+     * @param normal - Normal of the plane
+     * @param distanceFromOrigin - Distance from the origin of the scene
+     */
     void addGroundPlane(glm::vec3 normal, float distanceFromOrigin = 0.f);
 
-    /* Create and initialize a PhysX scene */
+    /* Initializes a physics scene */
     void createScene();
 
-    /* Set dynamic rigid body's global transform */
+    /**
+     * Sets the transform of a specific rigid body
+     * @param id - Unique ID for the target rigid body
+     * @param position - New absolute position
+     * @param angleInDegrees - New rotation angle in degrees
+     * @param rotationAxis - New axis around which to apply the rotation
+     *
+     * NOTE: Avoid moving or rotating rigid bodies into other rigid bodies to avoid errors in the physics simulation
+     */
     void setRigidBodyTransform(int id, glm::vec3 position, float angleInDegrees, glm::vec3 rotationAxis);
 
 private:
@@ -42,9 +61,6 @@ private:
 
     std::map<int, physx::PxRigidDynamic*> dynamicRigidBodies;
 
-    /* Checks if PhysX has been properly initialized */
+    /* Checks if the physics engine has been properly initialized */
     bool hasInitialized() const;
 };
-
-
-#endif //PHYSX4_PHYSICSENGINE_H

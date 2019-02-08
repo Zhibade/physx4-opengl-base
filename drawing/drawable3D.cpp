@@ -1,4 +1,5 @@
 #include "drawable3D.h"
+
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm.hpp"
@@ -15,7 +16,6 @@ void Drawable3D::draw(std::shared_ptr<ShaderSet> &shaderSet, bool renderWirefram
 
     glBindVertexArray(VAO); // Need to rebind vertex array on each draw so we can have multiple objects with different shapes
     glDrawArrays(drawMode, 0, vertCount);
-    //glDrawElements(GL_TRIANGLES, sizeof(CUBE_INDEXES), GL_UNSIGNED_SHORT, nullptr);
 }
 
 void Drawable3D::resetTransform()
@@ -74,7 +74,6 @@ Drawable3D::~Drawable3D()
 {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    //glDeleteBuffers(1, &EBO);
 }
 
 void Drawable3D::initVertexBuffers(float* vertexData, unsigned int size, unsigned int vertexCount)
@@ -82,17 +81,12 @@ void Drawable3D::initVertexBuffers(float* vertexData, unsigned int size, unsigne
     // Create buffers
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    //glGenBuffers(1, &EBO);
 
     vertCount = vertexCount;
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, size, &vertexData[0], GL_DYNAMIC_DRAW); // Change to GL_STATIC_DRAW if it doesn't move
-
-    /* Element buffer is not needed with the hard edges since every vertex is split
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); // Bind buffer to a specific type
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(CUBE_INDEXES), CUBE_INDEXES, GL_STATIC_DRAW);*/
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr); // Passing vertex position to shader (stride needs to be 6 to account for normals)
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float))); // Normals

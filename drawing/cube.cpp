@@ -1,4 +1,5 @@
 #include "cube.h"
+
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm.hpp"
@@ -45,6 +46,12 @@ void Cube3D::initRigidBody(int id)
 {
     rigidBodyID = id;
     physicsEngine->addBox(rigidBodyID, position, rotationDegrees, rotationAxis, glm::vec3(CUBE_HALF_EXTENT));
+}
+
+void Cube3D::resetTransform()
+{
+    Drawable3D::resetTransform();
+    physicsEngine->setRigidBodyTransform(rigidBodyID, position, rotationDegrees, rotationAxis);
 }
 
 void Cube3D::setPosition(glm::vec3 newPos)

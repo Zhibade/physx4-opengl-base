@@ -1,5 +1,7 @@
 #include "scene.h"
+
 #include <memory>
+
 #include "cube.h"
 #include "GLFW/glfw3.h"
 #include "glm.hpp"
@@ -30,13 +32,13 @@ Scene::Scene(bool enablePhysics)
 
     // Matrices
     viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, -1.0f, -6.5f)); // Moving camera backwards a bit
-    projMatrix = glm::perspective(glm::radians(45.f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.f);
+    projMatrix = glm::perspective(glm::radians(45.f), (float)CONSTANTS::WINDOW::WIN_WIDTH / (float)CONSTANTS::WINDOW::WIN_HEIGHT, 0.1f, 100.f);
 }
 
 void Scene::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(BG_COLOR_R, BG_COLOR_G, BG_COLOR_B, 1.0f);
+    glClearColor(CONSTANTS::RENDERING::BG_COLOR_R, CONSTANTS::RENDERING::BG_COLOR_G, CONSTANTS::RENDERING::BG_COLOR_B, 1.0f);
     glClearDepth(1.0f);
 
     glEnable(GL_DEPTH_TEST);
@@ -49,7 +51,7 @@ void Scene::render()
 
     //glColor3f(0.8f, 0.0f, 0.0f);
 
-    glViewport(0, 0, (GLsizei)WIN_WIDTH, (GLsizei)WIN_HEIGHT);
+    glViewport(0, 0, (GLsizei)CONSTANTS::WINDOW::WIN_WIDTH, (GLsizei)CONSTANTS::WINDOW::WIN_HEIGHT);
     glPushMatrix(); // BEGIN drawing
 
     grid->draw(activeShaderSet, false);

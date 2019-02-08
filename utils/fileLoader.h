@@ -1,12 +1,15 @@
-#ifndef PHYSX4_FILELOADER_H
-#define PHYSX4_FILELOADER_H
+#pragma once
 
-class ifstream;
+
+#include <string>
+
 
 namespace fileLoader
 {
-    /* Reads text file at the given path and returns the contents */
+    /**
+     * Reads the file at the given path and returns the contents
+     * @param filePath - Full file path
+     * @return - Contents of the file or empty if file is not found
+     */
     std::string readTextFile(const char* filePath);
 }
-
-#endif //PHYSX4_FILELOADER_H

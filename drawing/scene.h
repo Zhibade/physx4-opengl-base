@@ -1,7 +1,7 @@
-#ifndef PHYSX4_DISPLAY_H
-#define PHYSX4_DISPLAY_H
+#pragma once
 
 #include <memory>
+
 #include "glm.hpp"
 
 
@@ -11,19 +11,30 @@ class Plane3D;
 class ShaderSet;
 
 
+/* 3D Scene (rendering and phyics) that can contain 3D objects */
 class Scene
 {
 public:
+    /**
+     * Creates a new scene. Physics are enabled by default.
+     * @param enablePhysics - Toggle for using physics
+     */
     explicit Scene(bool enablePhysics = true);
     virtual ~Scene();
 
-    /* Scene rendering logic */
+    /* Scene rendering loop */
     void render();
 
-    /* Sets the current light position */
+    /**
+     * Sets the shader set to use when rendering
+     * @param shaderSet - ShaderSet to use
+     */
     void setActiveShaderSet(std::shared_ptr<ShaderSet> &shaderSet);
 
-    /* Sets the current light position */
+    /**
+     * Sets the global light position of the scene
+     * @param newPos - New global position of the light
+     */
     void setLightPos(glm::vec3 newPos);
 
 private:
@@ -39,5 +50,3 @@ private:
     bool usePhysics = true;
     std::shared_ptr<PhysicsEngine> physicsEngine;
 };
-
-#endif //PHYSX4_DISPLAY_H

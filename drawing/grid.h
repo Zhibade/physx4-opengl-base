@@ -1,22 +1,38 @@
-#ifndef PHYSX4_GRID_H
-#define PHYSX4_GRID_H
+#pragma once
 
 #include <memory>
+
 #include "drawable3D.h"
+
 
 class PhysicsEngine;
 
-
+/* 3D plane rendering */
 class Plane3D : public Drawable3D
 {
 public:
+    /**
+     * Creates a 3D plane with a specific ID. Physics will be enabled if a PhysicsEngine shared_ptr is given
+     * @param id - Unique ID for this 3D object
+     * @param physEngine - Physics engine instance pointer
+     *
+     * NOTE: Plane physics is currently implemented only as an infinite static plane
+     */
     Plane3D(unsigned int id, std::shared_ptr<PhysicsEngine> physEngine);
     ~Plane3D() override;
 
-    /* Gets the vertex data for the grid lines */
+    /**
+     * Gets the vertex and normal data for a 3D plane
+     * @param vertexData - OUT - Vertex and normal data
+     * @param size - OUT - Vertex data size
+     * @param vertexCount - OUT - Number of vertex in this mesh
+     */
     void getVertexData(float* &vertexData, unsigned int &size, unsigned int &vertexCount) override;
 
-    /* Initialize static physics plane primitive */
+    /**
+     * Initialize static physics plane primitive
+     * @param id - Unique ID for this rigid body (so it can be retrieved by the Physics engine)
+     */
     void initRigidBody();
 
 private:
@@ -35,6 +51,3 @@ private:
 
     std::shared_ptr<PhysicsEngine> physicsEngine;
 };
-
-
-#endif //PHYSX4_GRID_H

@@ -8,10 +8,8 @@
 #include "callbacks.h"
 #include "constants.h"
 #include "drawing/scene.h"
-
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-
 #include "utils/fileLoader.h"
 #include "utils/shaderLoader.h"
 
@@ -20,16 +18,16 @@ GLFWwindow* window;
 std::shared_ptr<Scene> worldScene;
 
 
-/* Window */
+/* Window initialization */
 bool initWindow()
 {
-    if (!glfwInit()) // Init GLFW
+    if (!glfwInit())
     {
         std::cerr << "[ERROR] [GLFW] :: An error occurred while initializing GLFW";
         return false;
     }
 
-    window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, "PhysX4 Test", nullptr, nullptr);
+    window = glfwCreateWindow(CONSTANTS::WINDOW::WIN_WIDTH, CONSTANTS::WINDOW::WIN_HEIGHT, "PhysX4 Test", nullptr, nullptr);
     if (!window)
     {
         std::cerr << "[ERROR] [GLFW] :: An error occurred while creating the window";
@@ -49,12 +47,12 @@ bool initWindow()
     return true;
 }
 
-/* 3D world */
+/* 3D world initialization*/
 void initWorld()
 {
-    // Shaders and shapes initialization
-    std::string vertShader = fileLoader::readTextFile(VERT_SHADER_PATH.c_str());
-    std::string fragShader = fileLoader::readTextFile(FRAG_SHADER_PATH.c_str());
+    // Shaders initialization
+    std::string vertShader = fileLoader::readTextFile(CONSTANTS::RENDERING::VERT_SHADER_PATH.c_str());
+    std::string fragShader = fileLoader::readTextFile(CONSTANTS::RENDERING::FRAG_SHADER_PATH.c_str());
 
     std::shared_ptr<ShaderSet> simpleShaderSet(new ShaderSet(vertShader.c_str(), fragShader.c_str()));
     simpleShaderSet->use();

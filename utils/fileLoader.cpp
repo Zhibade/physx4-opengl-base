@@ -1,8 +1,8 @@
+#include "fileLoader.h"
+
 #include <fstream>
 #include <iostream>
 #include <string>
-
-#include "fileLoader.h"
 
 std::string fileLoader::readTextFile(const char *filePath)
 {
