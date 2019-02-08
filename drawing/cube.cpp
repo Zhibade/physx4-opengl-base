@@ -30,6 +30,16 @@ Cube3D::~Cube3D()
     physicsEngine.reset();
 }
 
+void Cube3D::draw(std::shared_ptr<ShaderSet> &shaderSet, bool renderWireframe)
+{
+    if (physicsEngine)
+    {
+        updateTransformFromPhysics();
+    }
+
+    Drawable3D::draw(shaderSet, renderWireframe);
+}
+
 void Cube3D::getVertexData(float* &vertexData, unsigned int &size, unsigned int &vertexCount)
 {
     size = sizeof(CUBE_VERTEX_DATA);
@@ -64,4 +74,16 @@ void Cube3D::setRotation(float newDegrees, glm::vec3 newRotationAxis)
 {
     Drawable3D::setRotation(newDegrees, newRotationAxis);
     physicsEngine->setRigidBodyTransform(rigidBodyID, position, rotationDegrees, rotationAxis);
+}
+
+void Cube3D::updateTransformFromPhysics()
+{
+    float updatedAngle;
+    glm::vec3 updatedRotationAxis;
+
+    glm::vec3 updatedPosition = physicsEngine->getRigidBodyPosition(rigidBodyID);
+    physicsEngine->getRigidBodyRotation(rigidBodyID, updatedAngle, updatedRotationAxis);
+
+    Drawable3D::setPosition(updatedPosition);
+    Drawable3D::setRotation(updatedAngle, updatedRotationAxis);
 }

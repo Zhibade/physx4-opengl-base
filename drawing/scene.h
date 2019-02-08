@@ -45,7 +45,8 @@ private:
     glm::vec3 lightPos = glm::vec3(1.0f);
 
     std::unique_ptr<Plane3D> grid;
-    std::unique_ptr<Cube3D> theCube;
+    std::unique_ptr<Cube3D> cubeA;
+    std::unique_ptr<Cube3D> cubeB;
     std::shared_ptr<ShaderSet> activeShaderSet;
 
     bool usePhysics = true;

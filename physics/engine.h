@@ -16,7 +16,7 @@ public:
      * Initializes the physics engine. Debugging can be toggled on or off.
      * @param enableDebugging - Toggles debugging of the physics engine
      */
-    PhysicsEngine(bool enableDebugging = false);
+    explicit PhysicsEngine(bool enableDebugging = false);
     virtual ~PhysicsEngine();
 
     /**
@@ -40,6 +40,21 @@ public:
     void createScene();
 
     /**
+     * Get the absolute position of the rigid body matching the given ID
+     * @param id - Rigid body's unique ID
+     * @return Absolute position as a Vec3
+     */
+    glm::vec3 getRigidBodyPosition(int id) const;
+
+    /**
+     * Get the rotation of the rigid body matching the given ID
+     * @param id - Rigid body's unique ID
+     * @param angleInDegrees - OUT - Rotation angle in degrees
+     * @param rotationAxis - OUT - Rotation axis around which the rotation amount is applied
+     */
+    void getRigidBodyRotation(int id, float &angleInDegrees, glm::vec3 &rotationAxis);
+
+    /**
      * Sets the transform of a specific rigid body
      * @param id - Unique ID for the target rigid body
      * @param position - New absolute position
@@ -58,7 +73,7 @@ public:
 
 private:
     const float GRAVITY = -9.81f;
-    const float CUBE_DENSITY = 10.f;
+    const float CUBE_DENSITY = 0.1f;
 
     physx::PxDefaultAllocator pxAllocator;
     physx::PxDefaultErrorCallback pxErrorCallback;
@@ -82,4 +97,11 @@ private:
 
     /* Checks if the physics engine has been properly initialized */
     bool hasInitialized() const;
+
+    /**
+     * Get the transform of the rigid body matching the given ID
+     * @param id - Rigid body's unique ID
+     * @return Rigid body's transform or identity transform if not found
+     */
+    physx::PxTransform getRigidBodyTransform(int id) const;
 };

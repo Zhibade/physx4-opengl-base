@@ -105,6 +105,24 @@ void PhysicsEngine::createScene()
     }
 }
 
+glm::vec3 PhysicsEngine::getRigidBodyPosition(int id) const
+{
+    physx::PxTransform transform = getRigidBodyTransform(id);
+    return glm::vec3(transform.p[0], transform.p[1], transform.p[2]);
+}
+
+void PhysicsEngine::getRigidBodyRotation(int id, float &angleInDegrees, glm::vec3 &rotationAxis)
+{
+    physx::PxTransform transform = getRigidBodyTransform(id);
+
+    float angleRad;
+    physx::PxVec3 angleAxis;
+
+    transform.q.toRadiansAndUnitAxis(angleRad, angleAxis);
+    angleInDegrees = glm::degrees(angleRad);
+    rotationAxis = glm::vec3(angleAxis.x, angleAxis.y, angleAxis.z);
+}
+
 void PhysicsEngine::setRigidBodyTransform(int id, glm::vec3 position, float angleInDegrees, glm::vec3 rotationAxis)
 {
     if (!hasInitialized()) return;
@@ -138,4 +156,20 @@ bool PhysicsEngine::hasInitialized() const
     }
 
     return true;
+}
+
+physx::PxTransform PhysicsEngine::getRigidBodyTransform(int id) const
+{
+    if (!hasInitialized()) return physx::PxTransform {};
+
+    physx::PxRigidDynamic* rigidBody = dynamicRigidBodies.at(id);
+
+    if (!rigidBody)
+    {
+        std::cerr << "[ERROR] [PHYSICS] :: No rigid body found with the ID: " << id << std::endl;
+        return physx::PxTransform {};
+    }
+
+    physx::PxTransform transform = rigidBody->getGlobalPose();
+    return transform;
 }

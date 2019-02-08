@@ -22,6 +22,13 @@ public:
     ~Cube3D() override;
 
     /**
+     * Draws the cube into the scene. Passes model matrix to given shader set
+     * @param shaderSet - Shader set onto which to apply the model matrix
+     * @param renderWireframe - Render wireframe instead of solid
+     */
+    void draw(std::shared_ptr<ShaderSet> &shaderSet, bool renderWireframe) override;
+
+    /**
      * Gets the vertex and normal data for a cube with hard edges
      * @param vertexData - OUT - Vertex and normal data
      * @param size - OUT - Vertex data size
@@ -106,4 +113,7 @@ private:
 
     int rigidBodyID;
     std::shared_ptr<PhysicsEngine> physicsEngine;
+
+    /* Updates the absolute position and rotation from the physics simulation */
+    void updateTransformFromPhysics();
 };

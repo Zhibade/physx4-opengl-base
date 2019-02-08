@@ -22,13 +22,16 @@ Scene::Scene(bool enablePhysics, bool debugPhysics)
     }
 
     grid = std::make_unique<Plane3D>(1, physicsEngine);
-    theCube = std::make_unique<Cube3D>(2, physicsEngine);
+    cubeA = std::make_unique<Cube3D>(2, physicsEngine);
+    cubeB = std::make_unique<Cube3D>(3, physicsEngine);
 
     grid->setColor(glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
     grid->setScale(glm::vec3(2.0f, 2.0f, 2.0f));
 
-    theCube->setRotation(-45.f, glm::vec3(0.0f, 1.0f, 0.0f));
-    theCube->setPosition(glm::vec3(0.f, 0.5f, 0.f));
+    cubeA->setRotation(-45.f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cubeA->setPosition(glm::vec3(0.f, 1.5f, 0.f));
+
+    cubeB->setPosition(glm::vec3(0.f, 5.5f, 0.f));
 
     // Matrices
     viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, -1.0f, -6.5f)); // Moving camera backwards a bit
@@ -60,7 +63,8 @@ void Scene::render()
     glPushMatrix(); // BEGIN drawing
 
     grid->draw(activeShaderSet, false);
-    theCube->draw(activeShaderSet, false);
+    cubeA->draw(activeShaderSet, false);
+    cubeB->draw(activeShaderSet, false);
 
     glPopMatrix(); // END drawing
 }
@@ -78,7 +82,8 @@ void Scene::setLightPos(glm::vec3 newPos)
 Scene::~Scene()
 {
     grid.reset();
-    theCube.reset();
+    cubeA.reset();
+    cubeB.reset();
     activeShaderSet.reset();
     physicsEngine.reset();
 }
