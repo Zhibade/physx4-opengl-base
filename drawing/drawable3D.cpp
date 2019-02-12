@@ -36,9 +36,11 @@ void Drawable3D::setPosition(glm::vec3 newPos)
 {
     modelMatrix = glm::mat4(1.f);
 
-    modelMatrix = glm::rotate(modelMatrix, glm::radians(rotationDegrees), rotationAxis);
-    modelMatrix = glm::scale(modelMatrix, scale);
-    modelMatrix = glm::translate(modelMatrix, newPos);
+    glm::mat4 rotationMatrix = glm::rotate(modelMatrix, glm::radians(rotationDegrees), rotationAxis);
+    glm::mat4 scaleMatrix = glm::scale(modelMatrix, scale);
+    glm::mat4 translationMatrix = glm::translate(modelMatrix, newPos);
+
+    modelMatrix = (translationMatrix * rotationMatrix) * scaleMatrix;
 
     position = newPos;
 }
@@ -47,9 +49,11 @@ void Drawable3D::setRotation(float newDegrees, glm::vec3 newRotationAxis)
 {
     modelMatrix = glm::mat4(1.f);
 
-    modelMatrix = glm::rotate(modelMatrix, glm::radians(newDegrees), newRotationAxis);
-    modelMatrix = glm::scale(modelMatrix, scale);
-    modelMatrix = glm::translate(modelMatrix, position);
+    glm::mat4 translationMatrix = glm::translate(modelMatrix, position);
+    glm::mat4 rotationMatrix = glm::rotate(modelMatrix, glm::radians(newDegrees), newRotationAxis);
+    glm::mat4 scaleMatrix = glm::scale(modelMatrix, scale);
+
+    modelMatrix = (translationMatrix * rotationMatrix) * scaleMatrix;
 
     rotationDegrees = newDegrees;
     rotationAxis = newRotationAxis;
