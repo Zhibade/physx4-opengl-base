@@ -55,3 +55,26 @@ target_link_libraries(PhysX4 PhysXCommon_64)
 target_link_libraries(PhysX4 PhysXFoundation_64)
 target_link_libraries(PhysX4 PhysXExtensions_static_64)
 target_link_libraries(PhysX4 PhysXPvdSDK_static_64)
+
+# Copy shaders and required binaries after building
+add_custom_command(
+        TARGET PhysX4 POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_SOURCE_DIR}/shaders/diffuse.frag
+                ${CMAKE_CURRENT_BINARY_DIR}/shaders/diffuse.frag
+
+		COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_SOURCE_DIR}/shaders/simple.vert
+                ${CMAKE_CURRENT_BINARY_DIR}/shaders/simple.vert
+		
+		COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_SOURCE_DIR}/lib/physx/bin/PhysX_64.dll
+                ${CMAKE_CURRENT_BINARY_DIR}/PhysX_64.dll
+
+		COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_SOURCE_DIR}/lib/physx/bin/PhysXCommon_64.dll
+                ${CMAKE_CURRENT_BINARY_DIR}/PhysXCommon_64.dll
+
+		COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_SOURCE_DIR}/lib/physx/bin/PhysXFoundation_64.dll
+                ${CMAKE_CURRENT_BINARY_DIR}/PhysXFoundation_64.dll)

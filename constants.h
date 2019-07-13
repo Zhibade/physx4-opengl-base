@@ -20,8 +20,8 @@ namespace CONSTANTS
 
     namespace RENDERING
     {
-        const std::string VERT_SHADER_PATH = R"(C:\Users\Jose\Documents\TestProjects\PhysX4\shaders\simple.vert)";
-        const std::string FRAG_SHADER_PATH = R"(C:\Users\Jose\Documents\TestProjects\PhysX4\shaders\diffuse.frag)";
+        const std::string VERT_SHADER_PATH = R"(shaders\simple.vert)";
+        const std::string FRAG_SHADER_PATH = R"(shaders\diffuse.frag)";
 
         constexpr float BG_COLOR_R = 0.202f;
         constexpr float BG_COLOR_G = 0.193f;
